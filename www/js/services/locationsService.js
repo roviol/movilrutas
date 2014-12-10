@@ -1,7 +1,19 @@
-angular.module('starter').factory('LocationsService', [ function() {
+angular.module('starter').factory('LocationsService', [ '$http', function($http) {
 
   var locationsObj = {};
+  locationsObj.savedLocations=[];
 
+
+$http.get('http://54.187.171.113/rutas/puntos/').
+  success(function(data, status, headers, config) {
+      angular.forEach(data, function(value) {
+        this.push({id: value.pk, name: value.fields.nombre, lat: value.fields.lat, lng: value.fields.lon});
+      }, locationsObj.savedLocations);
+  }).
+  error(function(data, status, headers, config) {
+      console.log("error");
+  });
+/*
   locationsObj.savedLocations = [
     {
       name : "Washington D.C., USA",
@@ -35,7 +47,7 @@ angular.module('starter').factory('LocationsService', [ function() {
     }
 
   ];
-
+*/
   return locationsObj;
 
 }]);
